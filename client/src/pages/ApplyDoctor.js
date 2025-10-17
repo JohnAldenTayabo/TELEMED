@@ -6,12 +6,12 @@ import { useNavigate } from "react-router-dom";
 import { showLoading, hideLoading } from "../redux/features/alertSlice";
 import axios from "axios";
 import moment from "moment";
+
 const ApplyDoctor = () => {
   const { user } = useSelector((state) => state.user);
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  //handle form
+
   const handleFinish = async (values) => {
     try {
       dispatch(showLoading());
@@ -41,9 +41,10 @@ const ApplyDoctor = () => {
     } catch (error) {
       dispatch(hideLoading());
       console.log(error);
-      message.error("Somthing Went Wrrong ");
+      message.error("Something Went Wrong");
     }
   };
+
   return (
     <Layout>
       <h1 className="text-center">Apply Doctor</h1>
@@ -57,7 +58,7 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your first name" />
+              <Input type="text" placeholder="Your first name" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
@@ -67,7 +68,7 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your last name" />
+              <Input type="text" placeholder="Your last name" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
@@ -77,7 +78,7 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your contact no" />
+              <Input type="text" placeholder="Your contact no" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
@@ -87,12 +88,12 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="email" placeholder="your email address" />
+              <Input type="email" placeholder="Your email address" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
             <Form.Item label="Website" name="website">
-              <Input type="text" placeholder="your website" />
+              <Input type="text" placeholder="Your website" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
@@ -102,7 +103,7 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your clinic address" />
+              <Input type="text" placeholder="Your clinic address" />
             </Form.Item>
           </Col>
         </Row>
@@ -115,7 +116,7 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your specialization" />
+              <Input type="text" placeholder="Your specialization" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
@@ -125,17 +126,17 @@ const ApplyDoctor = () => {
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your experience" />
+              <Input type="text" placeholder="Your experience" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>
             <Form.Item
-              label="Fees Per Cunsaltation"
+              label="Fees Per Consultation"
               name="feesPerCunsaltation"
               required
               rules={[{ required: true }]}
             >
-              <Input type="text" placeholder="your contact no" />
+              <Input type="text" placeholder="e.g., 500 or 500 pesos" />
             </Form.Item>
           </Col>
           <Col xs={24} md={24} lg={8}>

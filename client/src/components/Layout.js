@@ -49,7 +49,7 @@ const Layout = ({ children }) => {
         <div className="layout">
           <div className="sidebar">
             <div className="logo">
-              <h6 className="text-light">DOC APP</h6>
+              <h6 className="text-light">TELEMED</h6>
               <hr />
             </div>
             <div className="menu">
@@ -83,7 +83,13 @@ const Layout = ({ children }) => {
                   <i className="fa-solid fa-bell"></i>
                 </Badge>
 
-                <Link to="/profile">{user?.name}</Link>
+                <Link
+                  to={
+                    user?.isDoctor ? `/doctor/profile/${user._id}` : "/profile"
+                  }
+                >
+                  {user?.name}
+                </Link>
               </div>
             </div>
             <div className="body">{children}</div>

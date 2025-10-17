@@ -62,17 +62,36 @@ const getDoctorByIdController = async (req, res) => {
 
 const doctorAppointmentsController = async (req, res) => {
   try {
-    const doctor = await doctorModel.findOne({ userId: req.body.userId });
-    const appointments = await appointmentModel.find({
-      doctorId: doctor._id,
-    });
+    console.log("--- Doctor Appointments Controller ---");
+    console.log("Looking for doctor linked to userId:", req.userId);
+
+    // First, find the doctor based on the logged-in user's ID
+    const doctor = await doctorModel.findOne({ userId: req.userId });
+
+    // LOG: Check if we found a doctor document
+    if (!doctor) {
+      console.log("RESULT: No doctor found for this user.");
+      return res
+        .status(404)
+        .send({ message: "Doctor not found", success: false });
+    }
+    console.log("Found doctor document with ID:", doctor._id);
+
+    // Then, find appointments for that specific doctor's ID
+    const appointments = await appointmentModel
+      .find({ doctorId: doctor._id })
+      .populate("userId");
+
+    // LOG: Check if any appointments were found for this doctor
+    console.log(`Found ${appointments.length} appointments for this doctor.`);
+
     res.status(200).send({
       success: true,
-      message: "Doctor Appointments fetch Successfully",
+      message: "Doctor Appointments fetched successfully",
       data: appointments,
     });
   } catch (error) {
-    console.log(error);
+    console.log("CRITICAL ERROR in doctorAppointmentsController:", error);
     res.status(500).send({
       success: false,
       error,

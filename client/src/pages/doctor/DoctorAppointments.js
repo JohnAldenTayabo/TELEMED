@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Layout from "./../../components/Layout";
-
 import axios from "axios";
-
 import moment from "moment";
 import { message, Table } from "antd";
 
@@ -11,7 +9,7 @@ const DoctorAppointments = () => {
 
   const getAppointments = async () => {
     try {
-      const res = await axios.get("/api/v1/doctor//doctor-appointments", {
+      const res = await axios.get("/api/v1/doctor/doctor-appointments", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -41,7 +39,7 @@ const DoctorAppointments = () => {
       );
       if (res.data.success) {
         message.success(res.data.message);
-        getAppointments();
+        getAppointments(); // Refresh the list
       }
     } catch (error) {
       console.log(error);
@@ -55,12 +53,17 @@ const DoctorAppointments = () => {
       dataIndex: "_id",
     },
     {
+      title: "Patient Name",
+      dataIndex: "name",
+      render: (text, record) => <span>{record.userId.name}</span>,
+    },
+    {
       title: "Date & Time",
       dataIndex: "date",
       render: (text, record) => (
         <span>
-          {moment(record.date).format("DD-MM-YYYY")} &nbsp;
-          {moment(record.time).format("HH:mm")}
+          {moment(record.date, "DD-MM-YYYY").format("DD-MM-YYYY")} &nbsp;
+          {moment(record.time, "HH:mm").format("HH:mm")}
         </span>
       ),
     },
@@ -74,12 +77,12 @@ const DoctorAppointments = () => {
       render: (text, record) => (
         <div className="d-flex">
           {record.status === "pending" && (
-            <div className="d-flex">
+            <div>
               <button
                 className="btn btn-success"
                 onClick={() => handleStatus(record, "approved")}
               >
-                Approved
+                Approve
               </button>
               <button
                 className="btn btn-danger ms-2"
@@ -93,10 +96,11 @@ const DoctorAppointments = () => {
       ),
     },
   ];
+
   return (
     <Layout>
-      <h1>Appoinmtnets Lists</h1>
-      <Table columns={columns} dataSource={appointments} />
+      <h1>Appointments List</h1>
+      <Table columns={columns} dataSource={appointments} rowKey="_id" />
     </Layout>
   );
 };

@@ -31,20 +31,20 @@ const Appointments = () => {
       title: "ID",
       dataIndex: "_id",
     },
-    // {
-    //   title: "Name",
-    //   dataIndex: "name",
-    //   render: (text, record) => (
-    //     <span>
-    //       {record.doctorInfo.firstName} {record.doctorInfo.lastName}
-    //     </span>
-    //   ),
-    // },
-    // {
-    //   title: "Phone",
-    //   dataIndex: "phone",
-    //   render: (text, record) => <span>{record.doctorInfo.phone}</span>,
-    // },
+    {
+      title: "Doctor",
+      dataIndex: "name",
+      render: (text, record) => (
+        <span>
+          {record.doctorId.firstName} {record.doctorId.lastName}
+        </span>
+      ),
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      render: (text, record) => <span>{record.doctorId.phone}</span>,
+    },
     {
       title: "Date & Time",
       dataIndex: "date",
@@ -63,8 +63,8 @@ const Appointments = () => {
 
   return (
     <Layout>
-      <h1>Appoinmtnets Lists</h1>
-      <Table columns={columns} dataSource={appointments} />
+      <h1>Appointments Lists</h1>
+      <Table columns={columns} dataSource={appointments} rowKey="_id" />
     </Layout>
   );
 };

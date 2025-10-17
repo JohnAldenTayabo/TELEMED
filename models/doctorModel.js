@@ -3,7 +3,9 @@ const mongoose = require("mongoose");
 const doctorSchema = new mongoose.Schema(
   {
     userId: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "users",
+      required: [true, "user id is required"],
     },
     firstName: {
       type: String,
@@ -30,14 +32,14 @@ const doctorSchema = new mongoose.Schema(
     },
     specialization: {
       type: String,
-      required: [true, "specialization is require"],
+      required: [true, "specialization is required"],
     },
     experience: {
       type: String,
       required: [true, "experience is required"],
     },
     feesPerCunsaltation: {
-      type: Number,
+      type: String, // Changed to String to prevent crashes. Change back to Number if you are certain only numbers will be submitted.
       required: [true, "fee is required"],
     },
     status: {
@@ -45,8 +47,8 @@ const doctorSchema = new mongoose.Schema(
       default: "pending",
     },
     timings: {
-      type: Object,
-      required: [true, "wrok timing is required"],
+      type: [String], // ✅ Must be an array of Strings
+      required: [true, "work timing is required"],
     },
   },
   { timestamps: true }

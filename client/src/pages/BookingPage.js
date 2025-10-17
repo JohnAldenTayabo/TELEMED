@@ -10,13 +10,12 @@ import { showLoading, hideLoading } from "../redux/features/alertSlice";
 const BookingPage = () => {
   const { user } = useSelector((state) => state.user);
   const params = useParams();
-  const [doctors, setDoctors] = useState([]);
+  const [doctor, setDoctor] = useState(null);
   const [date, setDate] = useState("");
-  const [time, setTime] = useState();
-  const [isAvailable, setIsAvailable] = useState(false);
+  const [time, setTime] = useState(null);
   const dispatch = useDispatch();
-  // login user data
-  const getUserData = async () => {
+
+  const getDoctorData = async () => {
     try {
       const res = await axios.post(
         "/api/v1/doctor/getDoctorById",
@@ -28,19 +27,26 @@ const BookingPage = () => {
         }
       );
       if (res.data.success) {
-        setDoctors(res.data.data);
+        setDoctor(res.data.data);
       }
     } catch (error) {
       console.log(error);
     }
   };
-  // ============ handle availiblity
+
   const handleAvailability = async () => {
     try {
+      if (!date || !time) {
+        return message.error("Date & Time are required");
+      }
       dispatch(showLoading());
       const res = await axios.post(
-        "/api/v1/user/booking-availbility",
-        { doctorId: params.doctorId, date, time },
+        "/api/v1/user/booking-availability",
+        {
+          doctorId: params.doctorId,
+          date: date,
+          time: time,
+        },
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -49,8 +55,6 @@ const BookingPage = () => {
       );
       dispatch(hideLoading());
       if (res.data.success) {
-        setIsAvailable(true);
-        console.log(isAvailable);
         message.success(res.data.message);
       } else {
         message.error(res.data.message);
@@ -60,12 +64,11 @@ const BookingPage = () => {
       console.log(error);
     }
   };
-  // =============== booking func
+
   const handleBooking = async () => {
     try {
-      setIsAvailable(true);
-      if (!date && !time) {
-        return alert("Date & Time Required");
+      if (!date || !time) {
+        return message.error("Date & Time are required");
       }
       dispatch(showLoading());
       const res = await axios.post(
@@ -73,7 +76,7 @@ const BookingPage = () => {
         {
           doctorId: params.doctorId,
           userId: user._id,
-          doctorInfo: doctors,
+          doctorInfo: doctor,
           userInfo: user,
           date: date,
           time: time,
@@ -95,26 +98,26 @@ const BookingPage = () => {
   };
 
   useEffect(() => {
-    getUserData();
-    //eslint-disable-next-line
+    getDoctorData();
+    // eslint-disable-next-line
   }, []);
+
   return (
     <Layout>
       <h3>Booking Page</h3>
       <div className="container m-2">
-        {doctors && (
+        {doctor && (
           <div>
             <h4>
-              Dr.{doctors.firstName} {doctors.lastName}
+              Dr. {doctor.firstName} {doctor.lastName}
             </h4>
-            <h4>Fees : {doctors.feesPerCunsaltation}</h4>
+            <h4>Fees: {doctor.feesPerCunsaltation}</h4>
             <h4>
-              Timings : {doctors.timings && doctors.timings[0]} -{" "}
-              {doctors.timings && doctors.timings[1]}{" "}
+              Timings: {doctor.timings && doctor.timings[0]} -{" "}
+              {doctor.timings && doctor.timings[1]}
             </h4>
             <div className="d-flex flex-column w-50">
               <DatePicker
-                aria-required={"true"}
                 className="m-2"
                 format="DD-MM-YYYY"
                 onChange={(value) => {
@@ -122,21 +125,12 @@ const BookingPage = () => {
                 }}
               />
               <TimePicker
-                aria-required={"true"}
-                format="HH:mm"
-                className="mt-3"
+                format="HH-mm"
+                className="m-2"
                 onChange={(value) => {
                   setTime(moment(value).format("HH:mm"));
                 }}
               />
-
-              <button
-                className="btn btn-primary mt-2"
-                onClick={handleAvailability}
-              >
-                Check Availability
-              </button>
-
               <button className="btn btn-dark mt-2" onClick={handleBooking}>
                 Book Now
               </button>
